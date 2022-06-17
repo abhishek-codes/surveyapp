@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abhi.survey.config.JwtUtil;
 import com.abhi.survey.dto.AuthenticationRequest;
 import com.abhi.survey.dto.AuthenticationResponse;
 import com.abhi.survey.model.User;
@@ -25,6 +26,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Autowired
     private UserService userService;
 
@@ -40,10 +45,10 @@ public class UserController {
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
     
-    @PostMapping(value="/")
-    public ResponseEntity<User> postNewUser(@RequestBody User user) {
+    @PostMapping(value="/register")
+    public ResponseEntity<Integer> postNewUser(@RequestBody User user) {
         User newUser = userService.createUser(user);
-        return new ResponseEntity<>(newUser,HttpStatus.CREATED);
+        return new ResponseEntity<>(newUser.getUserId(),HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -58,7 +63,7 @@ public class UserController {
             throw new RuntimeException("Invalid Credentials");
         }
         UserDetails userDetails = myUserDetailService.loadUserByUsername(request.getEmailId());
-        String token = "Bearer "+ userDetails.getUsername();
+        String token = "Bearer "+ jwtUtil.createToken(userDetails);
         return new ResponseEntity<>(new AuthenticationResponse(token),HttpStatus.OK);
     }
     
