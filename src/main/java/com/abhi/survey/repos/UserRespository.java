@@ -6,4 +6,6 @@ import com.abhi.survey.model.User;
 
 public interface UserRespository extends JpaRepository<User,Integer>{
     User findByUserEmail(String userEmail);
+
+    User findByUserId(Integer userId);
 }

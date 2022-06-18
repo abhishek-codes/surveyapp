@@ -29,7 +29,7 @@ public class JwtUtil {
     }
 
     public Authentication validateToken(String token){
-        Claims claims = Jwts.parser().setSigningKey(this.SECRET_KEY).parseClaimsJwt(token).getBody();
+        Claims claims = Jwts.parser().setSigningKey(this.SECRET_KEY).parseClaimsJws(token).getBody();
         if(claims.getExpiration().before(new Date())){
             return null;
         }

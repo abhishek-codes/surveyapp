@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.abhi.survey.service.MyUserDetailService;
 
@@ -19,6 +20,9 @@ public class SecurityConfig {
 
     @Autowired
     private MyUserDetailService userDetailsService;
+
+    @Autowired
+    private AuthenticationFilter authenticationFilter;
 
     @Bean
     public AuthenticationProvider authenticationProvider(){
@@ -43,6 +47,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity
             .csrf().disable()
+            .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests()
             .antMatchers("/users/").permitAll()
             .antMatchers("/users/register").permitAll()

@@ -22,6 +22,8 @@ public class Questions {
 
     private String questionText;
 
+    // 1=Rating
+    // 2=agree
     private Integer questionType;
 
 }

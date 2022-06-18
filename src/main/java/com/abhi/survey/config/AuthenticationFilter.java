@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -24,6 +26,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String tokenWithBearer = request.getHeader("Authorization");
         if(tokenWithBearer==null || !tokenWithBearer.startsWith("Bearer")){
             filterChain.doFilter(request, response);
+            return;
         } 
         String token = tokenWithBearer.substring(7);
         Authentication authentication = jwtUtil.validateToken(token);
